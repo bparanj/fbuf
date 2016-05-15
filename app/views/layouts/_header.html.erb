@@ -1,12 +1,19 @@
 <nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
   <%= link_to "Movie Reviews", root_path, class: "navbar-brand" %>
-  <ul class="nav navbar-nav">
+  <ul class="nav navbar-nav">	
 
-    <li class="nav-item active">
-      <a class="nav-link" href="movies/new">New Movie <span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">About</a>
+    <li class="nav-item <%= active_class('movies', 'new') %>">
+	  <%= link_to '/movies/new', class: "nav-link" do %>
+		New Movie
+		<span class="sr-only"> <%= active_span('movies', 'new') %> </span>
+	  <% end %>	  
+    </li>	
+	
+    <li class="nav-item <%= active_class('welcome', 'about') %>">
+	  <%= link_to about_path, class: 'nav-link' do %>
+		About
+		<span class="sr-only"> <%= active_span('welcome', 'about') %> </span>
+	  <% end %>
     </li>
   </ul>
   <form class="form-inline pull-xs-right">
@@ -14,3 +21,5 @@
     <button class="btn btn-success-outline" type="submit">Search</button>
   </form>
 </nav>
+
+

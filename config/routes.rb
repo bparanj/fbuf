@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'welcome/about', to: 'welcome#about', as: :about
+
   resources :movies do
   	collection do
   		get 'search'

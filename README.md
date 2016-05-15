@@ -142,3 +142,60 @@ http://upgrade-bootstrap.bootply.com/
 http://v4-alpha.getbootstrap.com/components/forms/
 
 
+
+rails g controller welcome about
+
+get 'welcome/about', to: 'welcome#about', as: :about
+
+
+Add some text to the about.html.erb. Change the static links in the header partial.
+
+<li class="nav-item <%= active_class('movies', 'new') %>">
+  <%= link_to '/movies/new', class: "nav-link" do %>
+	New Movie
+	<span class="sr-only"> <%= active_span('movies', 'new') %> </span>
+  <% end %>	  
+</li>	
+
+<li class="nav-item <%= active_class('welcome', 'about') %>">
+  <%= link_to about_path, class: 'nav-link' do %>
+	About
+	<span class="sr-only"> <%= active_span('welcome', 'about') %> </span>
+  <% end %>
+</li>
+
+
+module ApplicationHelper
+  def active_class(controller_name, action_name)    
+    "active" if current_page?(controller: controller_name, action: action_name)
+  end
+  
+  def active_span(controller_name, action_name)
+    "(current)" if current_page?(controller: controller_name, action: action_name)
+  end
+end
+
+Create a border and a box shadow around the page
+
+In application.scss:
+
+#wrapper {
+  border: 1px #e4e4e4 solid;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px #ccc;
+  background-color: #fff;
+}
+
+In layout file:
+
+<div id= 'wrapper' class="container">
+  <% flash.each do |name, msg| %>
+	<%= content_tag(:div, msg, class: "alert alert-info") %>
+  <% end %>
+  
+  <%= yield %>
+</div>
+
+
+[Create a border and a box shadow around the page](http://www.joomla-css.nl/en/create-your-own-joomla-3-template/modify-the-base-template/create-a-border-and-a-box-shadow 'Create a border and a box shadow around the page')
