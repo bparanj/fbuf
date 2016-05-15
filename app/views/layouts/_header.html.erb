@@ -3,7 +3,7 @@
   <ul class="nav navbar-nav">	
 
     <li class="nav-item <%= active_class('movies', 'new') %>">
-	  <%= link_to '/movies/new', class: "nav-link" do %>
+	  <%= link_to new_movie_path, class: "nav-link" do %>
 		New Movie
 		<span class="sr-only"> <%= active_span('movies', 'new') %> </span>
 	  <% end %>	  

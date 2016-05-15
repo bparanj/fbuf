@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <%= image_tag @movie.poster.url(:medium) %>
+
 <p>
   <strong>Title:</strong>
   <%= @movie.title %>
@@ -26,5 +27,9 @@
   <%= @movie.description %>
 </p>
 
-<%= link_to 'Edit', edit_movie_path(@movie) %> |
-<%= link_to 'Back', movies_path %>
+<div class="form-group row">
+  <div class="col-sm-10">
+    <%= link_to 'Edit', edit_movie_path(@movie), class: 'btn btn-primary' %>
+	  <%= link_to "Back", movies_path, class: "btn btn-secondary" %>
+  </div>
+</div>
