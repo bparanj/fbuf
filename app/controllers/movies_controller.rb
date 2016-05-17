@@ -1,6 +1,13 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: [:show, :edit, :update, :destroy]
 
+  def search
+    @movies = if params[:term].present?
+      Movie.search(params[:term])
+    else
+      Movie.all
+    end
+  end
   # GET /movies
   # GET /movies.json
   def index

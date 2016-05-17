@@ -16,10 +16,11 @@
 	  <% end %>
     </li>
   </ul>
-  <form class="form-inline pull-xs-right">
-    <input class="form-control" type="text" placeholder="Search">
-    <button class="btn btn-success-outline" type="submit">Search</button>
-  </form>
+  
+  <%= form_tag(search_movies_path, method: :get, class: "form-inline pull-xs-right", role: 'search') do %>
+    <%= text_field_tag :term, params[:term], class: 'form-control' %>
+	<%= submit_tag 'Search', name: nil, class: "btn btn-success-outline" %>
+  <% end %>
 </nav>
 
 
