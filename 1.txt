@@ -1,5 +1,8 @@
+Using Star Rating Plugin with Twitter Bootstrap 4 and Rails 5 Apps
+
 Style the movie show page.
 
+```rhtml
 <p id="notice"><%= notice %></p>
 
 <div class="panel panel-default">
@@ -50,29 +53,37 @@ Style the movie show page.
 
 Add a call to action in the home page by modifying movies/index.html.erb:
 
-```
+```rthml
 <div class='jumbotron'>
-	<h1> Your Favorite Movies Reviewed</h1>
-	<p>
-		Have you ever been to a movie and realized that it was so bad that you kick yourself for not reading the reviews? Kick yourself, no more. 
-	</p>
-	<p>
-		<%= link_to 'Signup To Write a Review', root_path, class: 'btn btn-primary btn-lg' %>
-	</p>
+  <h1> Your Favorite Movies Reviewed</h1>
+  <p>
+	Have you ever been to a movie and realized that it was so bad that you kick yourself for not reading the reviews? Kick yourself, no more. 
+  </p>
+  <p>
+	<%= link_to 'Signup To Write a Review', root_path, class: 'btn btn-primary btn-lg' %>
+  </p>
 </div>
 ```
 
-rails g scaffold review rating:integer comment:text
+Create a review resource.
 
+```
+rails g scaffold review rating:integer comment:text
+```
+
+Migrate the database.
+
+```
 rails db:migrate
+```
 
 Style the new review page.
 
+```rhtml
 <%= form_for(review) do |f| %>
   <% if review.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(review.errors.count, "error") %> prohibited this review from being saved:</h2>
-
       <ul>
       <% review.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -80,14 +91,12 @@ Style the new review page.
       </ul>
     </div>
   <% end %>
-
   <div class="form-group row">
     <%= f.label :rating, class: 'col-sm-2 form-control-label' %>
 	<div class="col-sm-6">
       <%= f.number_field :rating %>
 	</div>
   </div>
-
   <div class="form-group row">
     <%= f.label :comment, class: 'col-sm-2 form-control-label' %>
 	<div class="col-sm-6">
@@ -101,35 +110,44 @@ Style the new review page.
 	  <%= link_to "Back", movies_path, class: "btn btn-secondary" %>
     </div>
   </div>
-
 <% end %>
+```
 
-Nest reviews resource.
+Nest the reviews resource in routes.rb.
 
-  resources :movies do
-  	collection do
-  		get 'search'
-  	end
-    resources :reviews
-  end
+```ruby
+resources :movies do
+	collection do
+		get 'search'
+	end
+  resources :reviews
+end
+```
 
 In movies show page add a link to write a review.
 
+```rhtml
 <%= link_to 'Write a Review', new_movie_review_path(@movie) %>
+```
 
-Change the movie form partial.
+Change the movie form partial to use nested routes for the review url.
 
+```
 <%= form_for([@movie, review]) do |f| %>
+```
 
-Find the parent.
+Find the parent in the movies new action.
 
-  def new
-    @movie = Movie.find(params[:movie_id])
-    @review = Review.new
-  end
+```ruby
+def new
+  @movie = Movie.find(params[:movie_id])
+  @review = Review.new
+end
+```
 
 Now the new review form will render.
 
+```rhtml
 <div class="col-md-7 col-md-offset-1">
   <h1 class="review_title"><%= @movie.title %></h1>
 
@@ -145,59 +163,75 @@ Now the new review form will render.
     <% end %>
   <% end %>
 </div>
+```
 
+You can see a demo of jQuery raty plugin, [raty demo](http://www.htmldrive.net/items/demo/153/jQuery-Raty-A-Star-Rating-Plugin 'raty demo').
 
-jQuery raty plugin: http://www.htmldrive.net/items/demo/153/jQuery-Raty-A-Star-Rating-Plugin
+Download the jquery raty plugin zip file from jquery raty (https://github.com/wbotelhos/raty 'jquery raty') home page. Copy the jquery.raty.js to vendor/assets/javascripts folder. Copy the star images to app/assets/images folder. Declare the associations in the review and movie models.
 
-Download the zip file from https://github.com/wbotelhos/raty
-
-Copy the jquery.raty.js to vendor/assets/javascripts folder
-Copy the star images to app/assets/images folder
-
-
+```ruby
 class Review < ApplicationRecord
   belongs_to :movie
 end
+```
 
+```ruby
 class Movie < ApplicationRecord
   has_many :reviews
 end
+```
 
+Add the movie_id foreign key to reviews table.
+
+```
 rails g migration add_movie_id_to_reviews
+```
 
+```ruby
 class AddMovieIdToReviews < ActiveRecord::Migration[5.0]
   def change
     add_column :reviews, :movie_id, :integer
   end
 end
+```
 
+Migrate the database.
+
+```
 rails db:migrate
+```
 
+Add the raty jquery library in application.js.
+
+```
 //= require jquery.raty
+```
 
 after 
 
+```
 //= require jquery
+```
 
-in application.js
+You will now see the rating displayed in star format. Let's now make the rating a star when reviewing a movie. Change the rating from text field to star rating in the rating form.
 
-
-You will now see the rating displayed in star format. Let's now make the rating a star when reviewing a movie.
-
-Change the rating from text field to star rating in the rating form.
-
+```rhtml
 <div class="form-group row">
   <%= f.label :rating, class: 'col-sm-2 form-control-label' %>
   <div class="col-sm-6" id='star-rating'></div>
 </div>
+```
 
-Display average rating in the movie show page.
+Let's now display average rating in the movie show page.
 
+```rhtml
 <div class='star-rating' data-score=<%= @avg_rating %>></div>
 <em><%= "#{@reviews.size} reviews" %></em>
+```
 
 Calculate average rating in the movie show action.
 
+```rhtml
 def show
   @reviews = @movie.reviews.to_a
   @avg_rating = if @reviews.blank?
@@ -206,8 +240,8 @@ def show
     @movie.reviews.average(:rating).round(2)
   end
 end
+```
 
+## Summary
 
-
-
-
+In this article, you learned how to use jQuery Raty, star rating plugin with Twitter Bootstrap 4 and Rails 5 app.
