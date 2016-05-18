@@ -1,0 +1,3 @@
+Auto Complete using Typeahead and SearchKick
+
+http://blog.ragnarson.com/2013/10/10/adding-search-and-autocomplete-to-a-rails-app-with-elasticsearch.html

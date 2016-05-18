@@ -23,10 +23,25 @@ rails db:migrate
 
 Install imagemagick. On Mac:
 
+=======
+
+Migrate the database.
+
+```
+rails db:migrate
+```
+
+Install imagemagick. On Mac:
+
 ```
 brew install imagemagick
 Warning: imagemagick-6.9.2-4 already installed
 ```
+
+
+Add paperclip gem to Gemfile.
+
+=======
 
 Add paperclip gem to Gemfile.
 
@@ -223,6 +238,7 @@ Change the movies index page.
 ```
 
 You can now attach a movie poster when you create a movie. We now have the following issues:
+<<<<<<< Updated upstream
 
 1. The top portion of the movie poster is hidden behind the navigation.
 2. The movie posters on the home page overlap.
@@ -338,11 +354,66 @@ In layout file:
   
   <%= yield %>
 </div>
+=======
 
+1. The top portion of the movie poster is hidden behind the navigation.
+2. The movie posters on the home page overlap.
+
+To fix the overlap problem, change the css class used for the image.
+
+```rhtml
+<div class="row">
+  <% @movies.each do |movie| %>
+    <div class="col-sm-6 col-md-5">
+      <div class="thumbnail">
+        <%= link_to (image_tag movie.poster.url(:medium), class: 'image'), movie %>
+      </div>
+	  <hr/>
+    </div>
+  <% end %>
+</div>
+```
+
+Refer the Twitter Bootstrap Grid System in the resources section of this article to learn more. To fix the navigation bar hiding the poster, add `navbar-fixed-top` to the header partial. It now looks like this:
+
+```rhtml
+<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
+  <%= link_to "Movie Reviews", root_path, class: "navbar-brand" %>
+  <ul class="nav navbar-nav">
+
+    <li class="nav-item active">
+      <a class="nav-link" href="movies/new">New Movie <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">About</a>
+    </li>
+  </ul>
+  <form class="form-inline pull-xs-right">
+    <input class="form-control" type="text" placeholder="Search">
+    <button class="btn btn-success-outline" type="submit">Search</button>
+  </form>
+</nav>
+```
+
+We now have a simple movies database that can show all the movies in a nice grid and if you click on the movie poster, it will show the details of the movie. We have the following in our to do list.
+
+1. The forms are not styled using Twitter Bootstrap 4. 
+2. The active class is hard coded in the header partial for showing the current active tab. 
+
+In order to select the current tab as the active tab, we need to make it dynamic by using a Rails helper. We will tackle these two issues in the next part of this series.
+
+## Twitter Bootstrap Upgrade Tip
+
+You can convert a given Twitter Bootstrap 3.x class to 4.x by using [Bootply](http://upgrade-bootstrap.bootply.com/ 'Bootply'). However, be careful, sometimes they old classes are not required at all. 
+
+## Summary
+
+In this article, you learned how to integrate Twitter Bootstrap 4 with Rails 5 apps. 
+
+## References
 
 [Create a border and a box shadow around the page](http://www.joomla-css.nl/en/create-your-own-joomla-3-template/modify-the-base-template/create-a-border-and-a-box-shadow 'Create a border and a box shadow around the page')
 =======
 [Twitter Bootstrap 4 Docs](http://getbootstrap.com/components/#navbar-fixed-top 'Twitter Bootstrap 4 Docs') 
 [Twitter Bootstrap 3 with Rails 4](https://github.com/mackenziechild/movie_review 'Twitter Bootstrap 3 with Rails 4')
 [Twitter Bootstrap Grid System](http://www.quackit.com/bootstrap/bootstrap_4/tutorial/bootstrap_grid_system.cfm 'Twitter Bootstrap Grid System')
->>>>>>> Stashed changes
