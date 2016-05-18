@@ -24,6 +24,7 @@ gem 'turbolinks', '~> 5.x'
 gem 'jbuilder', '~> 2.0'
 gem "paperclip", "~> 5.0.0.beta1"
 gem 'bootstrap', '~> 4.0.0.alpha3'
+gem 'searchkick'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'

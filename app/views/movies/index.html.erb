@@ -1,10 +1,15 @@
+<div class='jumbotron'>
+	<h1> Your Favorite Movies Reviewed</h1>
+	<p>
+		Have you ever been to a movie and realized that it was so bad that you kick yourself for not reading the reviews? Kick yourself, no more. 
+	</p>
+	<p>
+		<%= link_to 'Signup To Write a Review', root_path, class: 'btn btn-primary btn-lg' %>
+	</p>
+</div>
+
 <div class="row">
-  <% @movies.each do |movie| %>
-    <div class="col-sm-6 col-md-5">
-      <div class="thumbnail">
-        <%= link_to (image_tag movie.poster.url(:medium), class: 'image'), movie %>
-      </div>
-	  <hr/>
-    </div>
-  <% end %>
+
+<%= render @movies %>
+
 </div>

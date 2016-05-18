@@ -3,7 +3,7 @@
   <ul class="nav navbar-nav">	
 
     <li class="nav-item <%= active_class('movies', 'new') %>">
-	  <%= link_to '/movies/new', class: "nav-link" do %>
+	  <%= link_to new_movie_path, class: "nav-link" do %>
 		New Movie
 		<span class="sr-only"> <%= active_span('movies', 'new') %> </span>
 	  <% end %>	  
@@ -16,10 +16,11 @@
 	  <% end %>
     </li>
   </ul>
-  <form class="form-inline pull-xs-right">
-    <input class="form-control" type="text" placeholder="Search">
-    <button class="btn btn-success-outline" type="submit">Search</button>
-  </form>
+  
+  <%= form_tag(search_movies_path, method: :get, class: "form-inline pull-xs-right", role: 'search') do %>
+    <%= text_field_tag :term, params[:term], class: 'form-control' %>
+	<%= submit_tag 'Search', name: nil, class: "btn btn-success-outline" %>
+  <% end %>
 </nav>
 
 
