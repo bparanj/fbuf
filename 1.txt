@@ -1,0 +1,213 @@
+Style the movie show page.
+
+<p id="notice"><%= notice %></p>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-4">
+        <%= image_tag @movie.poster.url(:medium) %>
+
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><strong>Title:</strong></td>
+                <td><%= @movie.title %></td>
+              </tr>
+              <tr>
+                <td><strong>Description:</strong></td>
+                <td><%= @movie.description %></td>
+              </tr>
+              <tr>
+                <td><strong>Movie length:</strong></td>
+                <td><%= @movie.duration %></td>
+              </tr>
+              <tr>
+                <td><strong>Director:</strong></td>
+                <td><%= @movie.director %></td>
+              </tr>
+              <tr>
+                <td><strong>Rating:</strong></td>
+                <td><%= @movie.rating %></td>
+              </tr>
+            </tbody>
+          </table>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-group row">
+  <div class="col-sm-10">
+    <%= link_to 'Edit', edit_movie_path(@movie), class: 'btn btn-primary' %>
+	  <%= link_to "Back", movies_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+```
+
+Add a call to action in the home page by modifying movies/index.html.erb:
+
+```
+<div class='jumbotron'>
+	<h1> Your Favorite Movies Reviewed</h1>
+	<p>
+		Have you ever been to a movie and realized that it was so bad that you kick yourself for not reading the reviews? Kick yourself, no more. 
+	</p>
+	<p>
+		<%= link_to 'Signup To Write a Review', root_path, class: 'btn btn-primary btn-lg' %>
+	</p>
+</div>
+```
+
+rails g scaffold review rating:integer comment:text
+
+rails db:migrate
+
+Style the new review page.
+
+<%= form_for(review) do |f| %>
+  <% if review.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(review.errors.count, "error") %> prohibited this review from being saved:</h2>
+
+      <ul>
+      <% review.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group row">
+    <%= f.label :rating, class: 'col-sm-2 form-control-label' %>
+	<div class="col-sm-6">
+      <%= f.number_field :rating %>
+	</div>
+  </div>
+
+  <div class="form-group row">
+    <%= f.label :comment, class: 'col-sm-2 form-control-label' %>
+	<div class="col-sm-6">
+      <%= f.text_area :comment, class: 'form-control' %>
+	<div>
+  </div>
+  <br/>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <%= f.submit 'Submit', class: 'btn btn-primary' %>
+	  <%= link_to "Back", movies_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+
+<% end %>
+
+Nest reviews resource.
+
+  resources :movies do
+  	collection do
+  		get 'search'
+  	end
+    resources :reviews
+  end
+
+In movies show page add a link to write a review.
+
+<%= link_to 'Write a Review', new_movie_review_path(@movie) %>
+
+Change the movie form partial.
+
+<%= form_for([@movie, review]) do |f| %>
+
+Find the parent.
+
+  def new
+    @movie = Movie.find(params[:movie_id])
+    @review = Review.new
+  end
+
+Now the new review form will render.
+
+<div class="col-md-7 col-md-offset-1">
+  <h1 class="review_title"><%= @movie.title %></h1>
+
+  <% if @reviews.blank? %>
+    <h3>No reviews just yet, would you like to add the first!</h3>
+    <%= link_to "Write Review", new_movie_review_path(@movie), class: "btn btn-primary" %>
+  <% else %>
+    <% @reviews.each do |review| %>
+      <div class="reviews">
+        <div class="star-rating" data-score= <%= review.rating %> ></div>
+        <p><%= review.comment %></p>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+
+jQuery raty plugin: http://www.htmldrive.net/items/demo/153/jQuery-Raty-A-Star-Rating-Plugin
+
+Download the zip file from https://github.com/wbotelhos/raty
+
+Copy the jquery.raty.js to vendor/assets/javascripts folder
+Copy the star images to app/assets/images folder
+
+
+class Review < ApplicationRecord
+  belongs_to :movie
+end
+
+class Movie < ApplicationRecord
+  has_many :reviews
+end
+
+rails g migration add_movie_id_to_reviews
+
+class AddMovieIdToReviews < ActiveRecord::Migration[5.0]
+  def change
+    add_column :reviews, :movie_id, :integer
+  end
+end
+
+rails db:migrate
+
+//= require jquery.raty
+
+after 
+
+//= require jquery
+
+in application.js
+
+
+You will now see the rating displayed in star format. Let's now make the rating a star when reviewing a movie.
+
+Change the rating from text field to star rating in the rating form.
+
+<div class="form-group row">
+  <%= f.label :rating, class: 'col-sm-2 form-control-label' %>
+  <div class="col-sm-6" id='star-rating'></div>
+</div>
+
+Display average rating in the movie show page.
+
+<div class='star-rating' data-score=<%= @avg_rating %>></div>
+<em><%= "#{@reviews.size} reviews" %></em>
+
+Calculate average rating in the movie show action.
+
+def show
+  @reviews = @movie.reviews.to_a
+  @avg_rating = if @reviews.blank?
+    0
+  else
+    @movie.reviews.average(:rating).round(2)
+  end
+end
+
+
+
+
+

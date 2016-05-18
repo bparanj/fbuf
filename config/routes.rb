@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   	collection do
   		get 'search'
   	end
+    resources :reviews
   end
 
   root 'movies#index'
