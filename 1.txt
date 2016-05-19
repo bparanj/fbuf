@@ -1,3 +1,4 @@
+D
 Using Star Rating Plugin with Twitter Bootstrap 4 and Rails 5 Apps
 
 Style the movie show page.

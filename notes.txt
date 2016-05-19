@@ -1,0 +1,204 @@
+rails g scaffold movie title duration director rating description:text
+
+rails db:migrate
+
+brew install imagemagick
+Warning: imagemagick-6.9.2-4 already installed
+
+gem "paperclip", "~> 5.0.0.beta1"
+
+bundle
+
+Movie model:
+
+  has_attached_file :poster, styles: { medium: "400x600#" }
+  validates_attachment_content_type :poster, content_type: /\Aimage\/.*\Z/
+
+rails g paperclip movie poster
+
+rails db:migrate
+
+Movie form partial:
+
+<%= form_for(movie, html: { multipart: true }) do |f| %>
+
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.file_field :image %>
+  </div>
+
+
+    def movie_params
+      params.require(:movie).permit(:title, :duration, :director, :rating, :description, :poster)
+    end
+
+Poster will not show up. Change the view:
+
+  <div class="field">
+    <%= f.label :poster %>
+    <%= f.file_field :poster %>
+  </div>
+
+Movie show page.
+
+<%= image_tag @movie.poster.url(:medium) %>
+
+Now you can see the uploaded movie poster.
+
+Add:
+
+/public/system/movies/posters
+
+to .gitignore.
+
+Use TB 4 with Rails 5
+
+Add bootstrap gem to Gemfile.
+
+gem 'bootstrap', '~> 4.0.0.alpha3'
+
+bundle
+
+
+@import "bootstrap";
+
+to application.css.
+
+Rename application.css to application.scss
+
+Remove:
+
+*= require_tree .
+*= require_self
+
+from application.scss. Use @import to import sass files. 
+
+
+
+Add:
+
+//= require bootstrap-sprockets
+
+to application.js.
+
+//= require jquery
+//= require bootstrap-sprockets
+//= require jquery_ujs
+//= require turbolinks
+//= require_tree .
+
+
+File to import not found or unreadable: bootstrap-sprockets
+
+_header.html.erb in layouts folder.
+
+Rails.application.routes.draw do
+  resources :movies do
+  	collection do
+  		get 'search'
+  	end
+  end
+
+  root 'movies#index'
+end
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fbuf</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+	<%= render 'layouts/header' %>
+	<div class="container">
+		<% flash.each do |name, msg| %>
+			<%= content_tag(:div, msg, class: "alert alert-info") %>
+		<% end %>
+		<%= yield %>
+	</div>
+  </body>
+</html>
+
+
+Movies index page.
+
+<div class="row">
+  <% @movies.each do |movie| %>
+    <div class="col-sm-6 col-md-3">
+      <div class="thumbnail">
+        <%= link_to (image_tag movie.poster.url(:medium), class: 'image'), movie %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+http://upgrade-bootstrap.bootply.com/
+
+
+http://v4-alpha.getbootstrap.com/components/forms/
+
+
+
+
+
+
+rails g controller welcome about
+
+get 'welcome/about', to: 'welcome#about', as: :about
+
+
+Add some text to the about.html.erb. Change the static links in the header partial.
+
+<li class="nav-item <%= active_class('movies', 'new') %>">
+  <%= link_to '/movies/new', class: "nav-link" do %>
+	New Movie
+	<span class="sr-only"> <%= active_span('movies', 'new') %> </span>
+  <% end %>	  
+</li>	
+
+<li class="nav-item <%= active_class('welcome', 'about') %>">
+  <%= link_to about_path, class: 'nav-link' do %>
+	About
+	<span class="sr-only"> <%= active_span('welcome', 'about') %> </span>
+  <% end %>
+</li>
+
+
+module ApplicationHelper
+  def active_class(controller_name, action_name)    
+    "active" if current_page?(controller: controller_name, action: action_name)
+  end
+  
+  def active_span(controller_name, action_name)
+    "(current)" if current_page?(controller: controller_name, action: action_name)
+  end
+end
+
+Create a border and a box shadow around the page
+
+In application.scss:
+
+#wrapper {
+  border: 1px #e4e4e4 solid;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px #ccc;
+  background-color: #fff;
+}
+
+In layout file:
+
+<div id= 'wrapper' class="container">
+  <% flash.each do |name, msg| %>
+	<%= content_tag(:div, msg, class: "alert alert-info") %>
+  <% end %>
+  
+  <%= yield %>
+</div>
+
+
+[Create a border and a box shadow around the page](http://www.joomla-css.nl/en/create-your-own-joomla-3-template/modify-the-base-template/create-a-border-and-a-box-shadow 'Create a border and a box shadow around the page')
