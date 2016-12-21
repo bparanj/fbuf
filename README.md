@@ -1,4 +1,5 @@
-D
+[![Movie Review Rails 5 App](https://d2d8g20jj5tev4.cloudfront.net/rubyplus-screencast.png)](https://www.rubyplus.com/episodes/1-Movie-Review-Rails-5-App)
+
 Integrating Twitter Bootstrap 4 with Rails 5
 
 In this article, we will develop a movie database webapp using Twitter Bootstrap 4 and Rails 5. I upgraded the Movie Review app developed by Mackenzie Child using Twitter Bootstrap 3.2 and Rails 4.1 to the current versions of Twitter Bootstrap and Rails. To install Rails 5 RC1, run:
